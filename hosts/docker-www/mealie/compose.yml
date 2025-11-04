@@ -1,0 +1,33 @@
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:latest # 
+    container_name: mealie
+    restart: always
+    ports:
+        - "9925:9000" # 
+    volumes:
+      - mealie-data:/app/data/
+    env_file:
+      - ./.env
+      - ./.env.local
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    restart: always
+    volumes:
+      - mealie-pgdata:/var/lib/postgresql/data
+    env_file:
+      - ./.env.pg.local
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+volumes:
+  mealie-data:
+  mealie-pgdata:

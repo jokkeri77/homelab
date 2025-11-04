@@ -1,0 +1,39 @@
+---
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - VERSION=docker
+      - PLEX_CLAIM= #optional
+    ports:
+      - 32400:32400
+      - 8324:8324
+      - 32410:32410
+      - 32412:32412
+      - 32413:32413
+      - 32414:32414
+      - 32469:32469
+    volumes:
+      - /home/jukka/plex:/config
+      - NFSTvheadend:/Tvheadend
+      - NFSvideo:/video
+      - NFSmusic:/music
+      - NFSTVseries:/TVseries
+    devices:
+      - /dev/dri:/dev/dri #optional
+    restart: unless-stopped
+
+volumes:
+   NFSTvheadend:
+       external: true
+   NFSmusic:
+       external: true
+   NFSvideo:
+       external: true
+   NFSTVseries:
+       external: true
